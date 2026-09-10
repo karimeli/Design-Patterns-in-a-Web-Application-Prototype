@@ -30,5 +30,3 @@ This is a working prototype that implements the Singleton, Factory, and MVC desi
 3. Run `npm install` to install dependencies.
 4. Run `npm run dev` to start the development environment.
 5. Open `http://localhost:3000` in your browser.
-
-Translated with DeepL.com (free version)

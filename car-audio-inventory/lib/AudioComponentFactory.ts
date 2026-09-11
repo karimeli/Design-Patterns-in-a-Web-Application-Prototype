@@ -5,6 +5,17 @@ export interface AudioComponent {
   getSpecs(): string;
 }
 
+export type AudioComponentType =
+  | 'subwoofer'
+  | 'equalizer'
+  | 'headunit'
+  | 'amplifier'
+  | 'speakers'
+  | 'tweeters'
+  | 'dsp'
+  | 'wiringkit'
+  | 'capacitor';
+
 class Subwoofer implements AudioComponent {
   type = 'Subwoofer';
   getSpecs() { return "Compact Active Subwoofer, ideal for V-shaped audio profiles"; }
@@ -51,9 +62,7 @@ class Capacitor implements AudioComponent {
 }
 
 export class AudioComponentFactory {
-  static create(
-    type: 'subwoofer' | 'equalizer' | 'headunit' | 'amplifier' | 'speakers' | 'tweeters' | 'dsp' | 'wiringkit' | 'capacitor'
-  ): AudioComponent {
+  static create(type: AudioComponentType): AudioComponent {
     switch (type) {
       case 'subwoofer': return new Subwoofer();
       case 'equalizer': return new Equalizer();

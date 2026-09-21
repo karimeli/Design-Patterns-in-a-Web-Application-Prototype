@@ -1,4 +1,3 @@
-// Location: app/add/page.tsx
 "use client";
 
 import Link from "next/link";
@@ -20,10 +19,11 @@ const componentTypes = [
 export default function AddComponentPage() {
   const [type, setType] = useState("subwoofer");
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setError("");
@@ -35,14 +35,22 @@ export default function AddComponentPage() {
         body: JSON.stringify({ type }),
       });
       const result = await response.json();
-      if (!response.ok) throw new Error(result.error ?? "No se pudo agregar el componente");
-      router.push("/");
+
+      if (!response.ok) {
+        throw new Error(result.error ?? "No se pudo agregar el componente");
+      }
+
+      setSuccess(true);
+      window.setTimeout(() => {
+        router.push("/");
+        router.refresh();
+      }, 1500);
     } catch (submitError: unknown) {
       setError(submitError instanceof Error ? submitError.message : "No se pudo agregar el componente");
     } finally {
       setLoading(false);
     }
-  };
+  }
 
   return (
     <main className="inventory-shell">
@@ -55,20 +63,28 @@ export default function AddComponentPage() {
           </div>
         </header>
 
-        <section className="inventory-toolbar">
-          <form className="contents" onSubmit={handleSubmit}>
-            <label className="field-label">
-              Tipo de componente
-              <select className="field-control" value={type} onChange={(event) => setType(event.target.value)}>
-                {componentTypes.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
-              </select>
-            </label>
-            <button className="action-button" disabled={loading} type="submit">
-              {loading ? "Guardando..." : "+ Agregar pieza"}
-            </button>
-          </form>
-          {error && <p className="error-message" role="alert">{error}</p>}
-        </section>
+        {success ? (
+          <section className="inventory-card" role="status">
+            <p className="card-type">Operación completada</p>
+            <h2 className="success-title">Componente agregado.</h2>
+            <p className="card-specs">El inventario se actualizará al volver al panel principal.</p>
+          </section>
+        ) : (
+          <section className="inventory-toolbar">
+            <form className="contents" onSubmit={handleSubmit}>
+              <label className="field-label">
+                Tipo de componente
+                <select className="field-control" value={type} onChange={(event) => setType(event.target.value)}>
+                  {componentTypes.map(([value, label]) => <option key={value} value={value}>{label}</option>)}
+                </select>
+              </label>
+              <button className="action-button" disabled={loading} type="submit">
+                {loading ? "Guardando..." : "+ Agregar pieza"}
+              </button>
+            </form>
+            {error && <p className="error-message" role="alert">{error}</p>}
+          </section>
+        )}
 
         <p className="loading-state"><Link href="/">Volver al inventario</Link></p>
       </div>

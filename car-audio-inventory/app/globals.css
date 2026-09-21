@@ -115,6 +115,7 @@ body::before {
 .card-type { color: var(--amber); font-size: 0.72rem; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
 .card-specs { color: #d0d7d4; font-size: 0.95rem; line-height: 1.55; margin: 18px 0 0; }
 .inventory-stat-value { color: var(--foreground); font-size: 3.5rem; font-weight: 800; line-height: 1; margin: 30px 0 0; }
+.success-title { color: var(--foreground); font-size: 1.8rem; margin: 14px 0 0; }
 .loading-state { color: var(--muted); padding: 24px 0; }
 
 @media (max-width: 760px) {

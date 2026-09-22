@@ -26,6 +26,7 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [error, setError] = useState("");
   const filteredInventory = inventory.filter((item) =>
     `${item.componentType} ${item.specs}`.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -61,6 +62,22 @@ export default function Home() {
       setError(saveError instanceof Error ? saveError.message : "Could not add component");
     } finally {
       setIsSaving(false);
+    }
+  }
+
+  async function handleDelete(id: string) {
+    setDeletingId(id);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/inventory?id=${encodeURIComponent(id)}`, { method: "DELETE" });
+      const result = response.status === 204 ? null : await response.json();
+      if (!response.ok) throw new Error(result?.error ?? "Could not delete component");
+      setInventory((currentInventory) => currentInventory.filter((item) => item.id !== id));
+    } catch (deleteError: unknown) {
+      setError(deleteError instanceof Error ? deleteError.message : "Could not delete component");
+    } finally {
+      setDeletingId(null);
     }
   }
 
@@ -117,6 +134,14 @@ export default function Home() {
                   <span className="card-index">{String(index + 1).padStart(2, "0")}</span>
                   <p className="card-type">{item.componentType}</p>
                   <p className="card-specs">{item.specs}</p>
+                  <button
+                    className="delete-button"
+                    disabled={deletingId === item.id}
+                    onClick={() => handleDelete(item.id)}
+                    type="button"
+                  >
+                    {deletingId === item.id ? "Eliminando..." : "Eliminar"}
+                  </button>
                 </article>
               ))}
             </div>

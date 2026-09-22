@@ -32,6 +32,14 @@ export class DatabaseConnection {
   }
 
   public getCache(): InventoryItem[] { return this.inventoryCache; }
+
+  public removeFromCache(id: string): boolean {
+    const itemIndex = this.inventoryCache.findIndex((item) => item.id === id);
+    if (itemIndex === -1) return false;
+
+    this.inventoryCache.splice(itemIndex, 1);
+    return true;
+  }
   
   public setCache(data: InventoryItem): void {
     this.inventoryCache.push(data); 

@@ -12,6 +12,11 @@ export const InventoryModel = {
     const db = DatabaseConnection.getInstance();
     return db.getCache();
   },
+
+  remove(id: string): boolean {
+    const db = DatabaseConnection.getInstance();
+    return db.removeFromCache(id);
+  },
   
   create(type: AudioComponentType): InventoryItem {
     const db = DatabaseConnection.getInstance();

@@ -22,6 +22,12 @@ export const InventoryController = {
     return InventoryModel.findAll();
   },
 
+  removeComponent(id: string): void {
+    if (!InventoryModel.remove(id)) {
+      throw new Error("Component not found");
+    }
+  },
+
   addComponent(type: string): InventoryItem {
     if (!isAudioComponentType(type)) {
       throw new Error(`Unsupported component type: ${type}`);

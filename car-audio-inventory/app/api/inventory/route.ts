@@ -21,3 +21,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
+
+export async function DELETE(request: NextRequest) {
+  try {
+    const id = request.nextUrl.searchParams.get("id");
+
+    if (!id) {
+      return NextResponse.json({ error: "A component id is required" }, { status: 400 });
+    }
+
+    InventoryController.removeComponent(id);
+    return new NextResponse(null, { status: 204 });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unable to delete component";
+    return NextResponse.json({ error: message }, { status: 404 });
+  }
+}
